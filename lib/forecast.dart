@@ -1,5 +1,4 @@
-
- class Forecast {
+class Forecast {
   String cod;
   double message;
   int cnt;
@@ -262,4 +261,3 @@ class Coord {
     return data;
   }
 }
- 
