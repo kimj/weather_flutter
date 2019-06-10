@@ -7,8 +7,8 @@ import 'package:weather_list/weather.dart';
 void main() => runApp(WeatherApp());
 
 Future<WeatherData> fetchWeather() async {
-  final response =
-      await http.get('https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22');
+  final response = await http.get(
+      'https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22');
 
   if (response.statusCode == 200) {
     // If server returns an OK response, parse the JSON
@@ -39,22 +39,24 @@ class WeatherApp extends StatelessWidget {
 class WeatherPage extends StatelessWidget {
   WeatherPage({Key key, this.title, this.weather}) : super(key: key);
   final String title;
-final Future<WeatherData> weather;
+  final Future<WeatherData> weather;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            appBar: AppBar(title: Text('Weather App')),
-            body: Center(child: FutureBuilder<WeatherData>(future: fetchWeather(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Text(snapshot.data.name);
-              } else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              }
+        appBar: AppBar(title: Text('Weather App')),
+        body: Center(
+            child: FutureBuilder<WeatherData>(
+                future: fetchWeather(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(snapshot.data.name);
+                  } else if (snapshot.hasError) {
+                    return Text("${snapshot.error}");
+                  }
 
-              // By default, show a loading spinner
-              return CircularProgressIndicator();
-            }
-            )));}   
+                  // By default, show a loading spinner
+                  return CircularProgressIndicator();
+                })));
+  }
 }
