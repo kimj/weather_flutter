@@ -50,7 +50,9 @@ class WeatherPage extends StatelessWidget {
                 future: fetchWeather(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return Text(snapshot.data.name);
+                    return Column(children: <Widget>[
+                      drawWeather(snapshot.data)
+                    ] );
                   } else if (snapshot.hasError) {
                     return Text("${snapshot.error}");
                   }
@@ -58,5 +60,23 @@ class WeatherPage extends StatelessWidget {
                   // By default, show a loading spinner
                   return CircularProgressIndicator();
                 })));
+  }
+
+  Widget drawWeather(WeatherData data) {
+    return Expanded(
+        child: Column(
+      children: <Widget>[
+        Text(
+          data.name,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        ),
+        Text(data.main.temp.toString()),
+        Text(data.main.tempMin.toString() + ' / ' + data.main.tempMax.toString()),
+        Text(data.main.humidity.toString()),
+        Text(data.main.pressure.toString()),
+      ],
+    ));
   }
 }
