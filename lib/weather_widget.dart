@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' show get;
 
 class Weather extends StatelessWidget {
   final List<String> weather;

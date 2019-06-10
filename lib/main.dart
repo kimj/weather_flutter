@@ -1,10 +1,28 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:weather_list/weather_list.dart';
+import 'package:http/http.dart' as http;
+import 'package:weather_list/weather.dart';
 
 void main() => runApp(WeatherApp());
 
+Future<WeatherData> fetchWeather() async {
+  final response =
+      await http.get('https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22');
+
+  if (response.statusCode == 200) {
+    // If server returns an OK response, parse the JSON
+    var data = WeatherData.fromJson(json.decode(response.body));
+    return data;
+  } else {
+    // If that response was not OK, throw an error.
+    throw Exception('Failed to load post');
+  }
+}
+
 class WeatherApp extends StatelessWidget {
+  WeatherApp({Key key}) : super(key: key);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -18,45 +36,25 @@ class WeatherApp extends StatelessWidget {
   }
 }
 
-class WeatherPage extends StatefulWidget {
-  WeatherPage({Key key, this.title}) : super(key: key);
+class WeatherPage extends StatelessWidget {
+  WeatherPage({Key key, this.title, this.weather}) : super(key: key);
   final String title;
-
-  @override
-  _WeatherPageState createState() => _WeatherPageState();
-}
-
-class _WeatherPageState extends State<WeatherPage> {
-  List<String> _weather = [];
-
-  @override
-  void initState() {
-    super.initState();
-    Future<Response> fetchPost() async {
-  return get('https://api.openweathermap.org/data/2.5/weather?q=London,uk');
-}
-  }
+final Future<WeatherData> weather;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        theme: ThemeData(primarySwatch: Colors.deepPurple),
-        home: Scaffold(
-            appBar: AppBar(title: Text('Long List App')),
-            body: Column(children: [
-              Container(
-                  margin: EdgeInsets.all(10.0),
-                  child: RaisedButton(
-                      color: Theme.of(context).primaryColor,
-                      splashColor: Colors.blueGrey,
-                      textColor: Colors.white,
-                      onPressed: () {
-                        setState(() {
-                          _weather.add('Laptop');
-                        });
-                      },
-                      child: Text('MacBook'))),
-              Expanded(child: WeatherList(_weather))
-            ])));
-  }
+    return Scaffold(
+            appBar: AppBar(title: Text('Weather App')),
+            body: Center(child: FutureBuilder<WeatherData>(future: fetchWeather(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Text(snapshot.data.name);
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+
+              // By default, show a loading spinner
+              return CircularProgressIndicator();
+            }
+            )));}   
 }
