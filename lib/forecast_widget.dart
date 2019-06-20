@@ -13,7 +13,8 @@ class ForecastWidget extends StatelessWidget {
             future: fetchForecast(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Column(children: <Widget>[drawForecast(snapshot.data)]);
+                return Column(children: <Widget>[//drawForecast(snapshot.data)
+                ]);
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
@@ -24,13 +25,13 @@ class ForecastWidget extends StatelessWidget {
 }
 
 Widget drawForecast(Forecast forecast) {
-  return ListView.builder(
+  return SingleChildScrollView(child: ListView.builder(
       itemCount: forecast.list.length,
       itemBuilder: (context, index) {
         return ListTile(
           title: Text('${forecast.list[index]}'),
         );
-      });
+      }));
 }
 
 Future<Forecast> fetchForecast() async {
