@@ -13,7 +13,7 @@ class ForecastWidget extends StatelessWidget {
             future: fetchForecast(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Column(children: <Widget>[//drawForecast(snapshot.data)
+                return Column(children: <Widget>[drawForecast(snapshot.data)
                 ]);
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
@@ -30,6 +30,12 @@ Widget drawForecast(Forecast forecast) {
       itemBuilder: (context, index) {
         return ListTile(
           title: Text('${forecast.list[index]}'),
+          subtitle: Text('${forecast.list[index].weather}'),
+          leading: CircleAvatar(
+            backgroundImage: Icons.desktop_mac.,
+
+            ),
+          ),
         );
       }));
 }
