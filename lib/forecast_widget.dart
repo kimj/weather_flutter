@@ -1,8 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:weather_list/objects/forecast.dart';
 
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 class ForecastWidget extends StatelessWidget {
   Future<Forecast> weeklyForecast;
 
@@ -13,8 +14,7 @@ class ForecastWidget extends StatelessWidget {
             future: fetchForecast(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Column(children: <Widget>[drawForecast(snapshot.data)
-                ]);
+                return Column(children: <Widget>[drawForecast(snapshot.data)]);
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
@@ -25,19 +25,19 @@ class ForecastWidget extends StatelessWidget {
 }
 
 Widget drawForecast(Forecast forecast) {
-  return SingleChildScrollView(child: ListView.builder(
-      itemCount: forecast.list.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text('${forecast.list[index]}'),
-          subtitle: Text('${forecast.list[index].weather}'),
-          leading: CircleAvatar(
-            backgroundImage: Icons.desktop_mac.,
+  return SingleChildScrollView(
+      child: ListView.builder(
+          itemCount: forecast.list.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text('${forecast.list[index]}'),
+              subtitle: Text('${forecast.list[index].weather}'),
+              leading: CircleAvatar(
+                // backgroundImage:
 
-            ),
-          ),
-        );
-      }));
+              ),
+            );
+          }));
 }
 
 Future<Forecast> fetchForecast() async {
