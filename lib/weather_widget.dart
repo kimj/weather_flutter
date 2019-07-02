@@ -9,17 +9,17 @@ class WeatherWidget extends StatelessWidget {
   final String title;
   final Future<WeatherData> weather;
 
-  TextStyle large = TextStyle(
+  final TextStyle large = TextStyle(
     fontSize: 48,
     color: Colors.white,
   );
 
-  TextStyle medium = TextStyle(
+  final TextStyle medium = TextStyle(
     fontSize: 36,
     color: Colors.white,
   );
 
-  TextStyle small = TextStyle(
+  final TextStyle small = TextStyle(
     fontSize: 24,
     color: Colors.white,
   );
