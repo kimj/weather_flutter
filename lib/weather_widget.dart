@@ -9,6 +9,20 @@ class WeatherWidget extends StatelessWidget {
   final String title;
   final Future<WeatherData> weather;
 
+  TextStyle large = TextStyle(
+    fontSize: 48,
+    color: Colors.white,
+  );
+
+  TextStyle medium = TextStyle(
+    fontSize: 36,
+    color: Colors.white,
+  );
+
+  TextStyle small = TextStyle(
+    fontSize: 24,
+    color: Colors.white,
+  );
   Future<WeatherData> fetchWeather() async {
     final response = await http.get(
         'https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22');
@@ -19,7 +33,7 @@ class WeatherWidget extends StatelessWidget {
       return data;
     } else {
       // If that response was not OK, throw an error.
-      throw Exception('Failed to load post');
+      throw Exception('Failed to load weather');
     }
   }
 
@@ -29,8 +43,7 @@ class WeatherWidget extends StatelessWidget {
         future: fetchWeather(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Column(
-                children: <Widget>[drawCurrentWeather(snapshot.data)]);
+            return Column(children: <Widget>[drawWeather(snapshot.data)]);
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
@@ -39,68 +52,46 @@ class WeatherWidget extends StatelessWidget {
         });
   }
 
-  Widget drawWeather(WeatherData data) {
-    return Expanded(
-        child: Column(
-          children: <Widget>[
-            Text(
-              data.name,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-            ),
-            Text(data.main.temp.toString()),
-            Text(data.main.tempMin.toString() +
-                ' / ' +
-                data.main.tempMax.toString()),
-            Text(data.main.humidity.toString()),
-            Text(data.main.pressure.toString()),
-          ],
-        ));
+  int toFahrenheit(double temp) {
+    return ((temp - 273.15) * 9 / 5 + 32).toInt();
   }
 
-  Widget drawCurrentWeather(WeatherData data) {
+  Widget drawWeather(WeatherData data) {
     return Expanded(
         child: Column(children: <Widget>[
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(
-                data.name.toString(),
-                style: TextStyle(
-                  fontSize: 34,
-                  color: Colors.black,
-                ),
-              ),
+              Padding(child:
+              Text(data.name.toString(), style: large),
+                  padding: EdgeInsets.all(16.0)
+              )
+
             ],
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              Text(data.dt.toString() + 'º',
-                  style: TextStyle(
-                    fontSize: 9,
-                    color: Colors.black,
-                  )),
+              Text(toFahrenheit(data.main.temp).toString() + 'ºF',
+                  style: TextStyle(fontSize: 72.0, color: Colors.white)),
             ],
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               SizedBox(width: 9),
-              Text(data.weather[0].main,
-                  style: TextStyle(
-                    fontSize: 19,
-                    color: Colors.black,
-                  )),
+              Text(
+                  toFahrenheit(data.main.tempMin).toString() +
+                      'ºF / ' +
+                      toFahrenheit(data.main.tempMax).toString() +
+                      'ºF',
+                  style: medium),
             ],
           ),
-
-
           Align(
             alignment: Alignment.bottomCenter,
             child: Row(
@@ -111,42 +102,33 @@ class WeatherWidget extends StatelessWidget {
                     children: <Widget>[
                       Text("Wind",
                           style: TextStyle(
-                            fontSize: 9,
-                            color: Colors.black,
+                            fontSize: 18,
+                            color: Colors.white,
                           )),
                       Text(data.wind.speed.toString() + 'km/h',
-                          style: TextStyle(
-                            fontSize: 22,
-                            color: Colors.black,
-                          )),
+                          style: medium),
                     ],
                   ),
                   Column(
                     children: <Widget>[
                       Text("Pressure",
                           style: TextStyle(
-                            fontSize: 9,
-                            color: Colors.black,
+                            fontSize: 18,
+                            color: Colors.white,
                           )),
                       Text(data.main.pressure.toString() + 'kPa',
-                          style: TextStyle(
-                            fontSize: 22,
-                            color: Colors.black,
-                          )),
+                          style: medium),
                     ],
                   ),
                   Column(
                     children: <Widget>[
                       Text("Humidity",
                           style: TextStyle(
-                            fontSize: 9,
-                            color: Colors.black,
+                            fontSize: 18,
+                            color: Colors.white,
                           )),
                       Text(data.main.humidity.toString() + "%",
-                          style: TextStyle(
-                            fontSize: 22,
-                            color: Colors.black,
-                          )),
+                          style: medium),
                     ],
                   ),
                 ]),
