@@ -23,7 +23,8 @@ class WeatherWidget extends StatelessWidget {
     fontSize: 24,
     color: Colors.white,
   );
-  Future<WeatherData> fetchWeather() async {
+
+  Future<WeatherData> _fetchWeather() async {
     final response = await http.get(
         'https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22');
 
@@ -40,7 +41,7 @@ class WeatherWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<WeatherData>(
-        future: fetchWeather(),
+        future: _fetchWeather(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(children: <Widget>[drawWeather(snapshot.data)]);
@@ -52,7 +53,7 @@ class WeatherWidget extends StatelessWidget {
         });
   }
 
-  int toFahrenheit(double temp) {
+  int _toFahrenheit(double temp) {
     return ((temp - 273.15) * 9 / 5 + 32).toInt();
   }
 
@@ -75,8 +76,9 @@ class WeatherWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              Text(toFahrenheit(data.main.temp).toString() + 'ºF',
+              Text(_toFahrenheit(data.main.temp).toString(),
                   style: TextStyle(fontSize: 72.0, color: Colors.white)),
+              Text('ºF', style: TextStyle(fontSize: 36.0, color: Colors.white))
             ],
           ),
           Row(
@@ -85,9 +87,9 @@ class WeatherWidget extends StatelessWidget {
             children: <Widget>[
               SizedBox(width: 9),
               Text(
-                  toFahrenheit(data.main.tempMin).toString() +
+                  _toFahrenheit(data.main.tempMin).toString() +
                       'ºF / ' +
-                      toFahrenheit(data.main.tempMax).toString() +
+                      _toFahrenheit(data.main.tempMax).toString() +
                       'ºF',
                   style: medium),
             ],
@@ -98,38 +100,47 @@ class WeatherWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Text("Wind",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          )),
-                      Text(data.wind.speed.toString() + 'km/h',
-                          style: medium),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        Text("Wind",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            )),
+                        Text(data.wind.speed.toString() + 'km/h',
+                            style: medium),
+                      ],
+                    ),
                   ),
-                  Column(
-                    children: <Widget>[
-                      Text("Pressure",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          )),
-                      Text(data.main.pressure.toString() + 'kPa',
-                          style: medium),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        Text("Pressure",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            )),
+                        Text(data.main.pressure.toString() + 'kPa',
+                            style: medium),
+                      ],
+                    ),
                   ),
-                  Column(
-                    children: <Widget>[
-                      Text("Humidity",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          )),
-                      Text(data.main.humidity.toString() + "%",
-                          style: medium),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        Text("Humidity",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            )),
+                        Text(data.main.humidity.toString() + "%",
+                            style: medium),
+                      ],
+                    ),
                   ),
                 ]),
           )
