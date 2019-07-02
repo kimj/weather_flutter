@@ -20,7 +20,7 @@ class WeatherApp extends StatelessWidget {
                     fit: BoxFit.cover)),
             child: WeatherWidget(),
           ),
-        );,
+        ),
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ));
